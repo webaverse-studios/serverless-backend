@@ -1,6 +1,24 @@
-import fetch from 'node-fetch';
+import { fetch } from 'node-fetch';
 
-const getPolygonNFTCollection = async (req, res) => {
+const allowCors = fn => async (req, res) => {
+  res.setHeader('Access-Control-Allow-Credentials', true)
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  // another common pattern
+  // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    '*'
+  )
+  res.setHeader("Content-Type", "application/json")
+  if (req.method === 'OPTIONS') {
+    res.status(200).end()
+    return
+  }
+  return await fn(req, res)
+}
+
+const handler = async (req, res) => {
     const {collectionAddress, walletAddress} = req.query;
     const POLYGON_API_KEY = 'bN2G8nP-vDFAnRXksfpd7I7g5f9c0GqD'
     const baseURL = `https://polygon-mainnet.g.alchemy.com/v2/${POLYGON_API_KEY}/getNFTs/`
@@ -13,4 +31,4 @@ const getPolygonNFTCollection = async (req, res) => {
     return res.status(200).json({ nftList });
 }
 
-export default getPolygonNFTCollection;
+module.exports = allowCors(handler)
