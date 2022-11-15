@@ -1,4 +1,4 @@
-import { fetch } from 'node-fetch';
+const fetch = require('node-fetch');
 
 const allowCors = fn => async (req, res) => {
   res.setHeader('Access-Control-Allow-Credentials', true)
@@ -28,7 +28,8 @@ const handler = async (req, res) => {
         method: 'get',
         redirect: 'follow'
     }).then(response => response.json())
-    return res.status(200).json({ nftList });
+    console.log("nftlist", nftList)
+    return res.json({ nftList });
 }
 
-module.exports = allowCors(handler)
+export default allowCors(handler)
