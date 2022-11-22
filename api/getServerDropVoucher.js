@@ -44,17 +44,13 @@ const handler = async (req, res) => {
     let signer = new ethers.Wallet(
         process.env.VOUCHER_SIGN_PRIVATE_KEY // private key
     );
-    console.log("env1", process.env.VOUCHER_SIGN_PRIVATE_KEY)
-    console.log("env2", process.env.VOUCHER_SIGN_WEBAVERSEADDRESS)
 
     const signature = await signer._signTypedData(domain, types, signData);
     console.log("created Signature: ", signature);
 
     return res.json({
         ...signData,
-        signature,
-        "env1": process.env.VOUCHER_SIGN_PRIVATE_KEY,
-        "env2": process.env.VOUCHER_SIGN_WEBAVERSEADDRESS
+        signature
     });
 }
 
