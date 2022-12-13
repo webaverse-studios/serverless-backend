@@ -19,16 +19,21 @@ const allowCors = fn => async (req, res) => {
 }
 
 const handler = async (req, res) => {
-    const {collectionAddress, walletAddress} = req.query;
+    const {collectionAddress, walletAddress, network} = req.query;
     const POLYGON_API_KEY = 'bN2G8nP-vDFAnRXksfpd7I7g5f9c0GqD'
-    const baseURL = `https://polygon-mainnet.g.alchemy.com/v2/${POLYGON_API_KEY}/getNFTs/`
-    console.log(baseURL, collectionAddress, walletAddress)
+    const POLYGON_BASEURL = `https://polygon-mainnet.g.alchemy.com/v2/${POLYGON_API_KEY}/getNFTs/`
+
+    const ETHEREUM_API_KEY = 'OOWUrxHDTRyPmbYOSGyq7izHNQB1QYOv'
+    const ETHEREUM_BASEURL = `https://eth-mainnet.g.alchemy.com/v2/${ETHEREUM_API_KEY}/getNFTs/`
+
+    const baseURL = (network === 'ETHEREUM') ? ETHEREUM_BASEURL : POLYGON_BASEURL
+
     const nftList = await fetch(`${baseURL}?owner=${walletAddress}&contractAddresses%5B%5D=${collectionAddress}`,
     {
         method: 'get',
         redirect: 'follow'
     }).then(response => response.json())
-    console.log("nftlist", nftList)
+    
     return res.json({ nftList });
 }
 
